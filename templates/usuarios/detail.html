@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% spaceless %}
+<div class="row">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">Detalhes do Usuário: {{ usuario.username }}</h1>
+        <h4 class="card-description">Informações completas sobre o usuário.</h4>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Username:</label>
+          <p class="form-control-static mb-0 font-weight-bold">{{ usuario.username }}</p>
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Nome Completo:</label>
+          <p class="form-control-static mb-0 font-weight-bold">{{ usuario.nome }}</p>
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Email:</label>
+          <p class="form-control-static mb-0">{{ usuario.email }}</p>
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Tipo:</label>
+          <p class="form-control-static mb-0">{{ usuario.get_tipo_display }}</p>
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Idade:</label>
+          <p class="form-control-static mb-0">{{ usuario.idade|default:"N/A" }}</p>
+        </div>
+        
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Telefone:</label>
+          <p class="form-control-static mb-0">{{ usuario.telefone|default:"N/A" }}</p>
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">CPF:</label>
+          <p class="form-control-static mb-0">{{ usuario.cpf|default:"N/A" }}</p>
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Matrícula:</label>
+          <p class="form-control-static mb-0">{{ usuario.matricula|default:"N/A" }}</p>
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Ativo:</label>
+          <p class="form-control-static mb-0">{% if usuario.is_active %}Sim{% else %}Não{% endif %}</p>
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Staff:</label>
+          <p class="form-control-static mb-0">{% if usuario.is_staff %}Sim{% else %}Não{% endif %}</p>
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Superusuário:</label>
+          <p class="form-control-static mb-0">{% if usuario.is_superuser %}Sim{% else %}Não{% endif %}</p>
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Data de Criação:</label>
+          <p class="form-control-static mb-0">{{ usuario.add_em|date:"d/m/Y H:i" }}</p>
+        </div>
+        
+        <div class="mt-4">
+            <a href="{% url 'usuarios_index' %}" class="btn btn-dark">Voltar para a Listagem</a>
+            <a href="{% url 'usuarios_update' id_usuario=usuario.id %}" class="btn btn-warning ml-2">Editar Usuário</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endspaceless %}
+{% endblock %}

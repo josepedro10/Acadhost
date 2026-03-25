@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">Listagem de Projetos</h1>
+        <h4 class="card-description">
+          Aqui você pode visualizar todos os projetos cadastrados.
+        </h4>
+
+        <a href="{% url 'projeto_add' %}" class="btn btn-primary mb-3">Cadastrar Novo Projeto</a>
+
+        {% if projetos %}
+        <div class="table-responsive"> {# Mantido ou Adicionado: Envolve a tabela para rolagem em telas pequenas #}
+          <table class="table"> {# Removido 'table-bordered' para usar o estilo do snippet, que parece ser 'table' puro ou com outros estilos internos do tema #}
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Autor</th>
+                <th>Data de Criação</th>
+                <th>Última Atualização</th>
+                <th>Tags</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for projeto in projetos %}
+              <tr>
+                <td>{{ projeto.nome }}</td>
+                <td>
+                  {# Adaptando o estilo de "Client Name" para "Autor" #}
+                  {# Se o autor tiver uma imagem de perfil, você pode adicioná-la aqui. #}
+                  {# Exemplo: <img src="{% static 'caminho/para/imagem/do/autor.jpg' %}" alt="image" class="rounded-circle" /> #}
+                  <span class="pl-2">{{ projeto.autor.get_full_name|default:projeto.autor.username }}</span>
+                </td>
+                <td>{{ projeto.data_criacao|date:"d/m/Y H:i" }}</td>
+                <td>{{ projeto.data_atualizacao|date:"d/m/Y H:i" }}</td>
+                <td>
+                  {% for tag in projeto.tags.all %}
+                    <span class="badge badge-outline-info">{{ tag.nome }}</span>{% if not forloop.last %}, {% endif %}
+                  {% empty %}
+                    Nenhuma tag
+                  {% endfor %}
+                </td>
+                <td>
+                    <a href="/projeto/{{ projeto.id }}/"> <button type="submit" class="btn btn-info btn-sm mr-1">Ver detalhes</button></a>
+                    <a href="/projeto/update/{{ projeto.id }}/"> <button type="submit" class="btn btn-warning btn-sm mr-1">Editar</button></a>
+                    <a href="/projeto/delete/{{ projeto.id }}/"> <button type="submit" class="btn btn-danger btn-sm mr-1">Excluir</button></a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p>Nenhum projeto cadastrado ainda. <a href="{% url 'projeto_add' %}">Cadastre o primeiro!</a></p>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4"> {# Adiciona um margin-top para separar os cards #}
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">Tags Existentes</h1>
+        <h4 class="card-description">
+          Aqui você pode visualizar e gerenciar as tags disponíveis.
+        </h4>
+
+        <a href="{% url 'tag_add' %}" class="btn btn-primary mb-3">Cadastrar Nova Tag</a>
+
+        {% if tags %}
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for tag in tags %}
+              <tr>
+                <td>{{ tag.nome }}</td>
+                <td>
+                  <a href="/projeto/tag/update/{{ tag.id }}/" class="btn btn-warning btn-sm mr-1">Editar</a>
+                  <a href="/projeto/tag/delete/{{ tag.id }}/" class="btn btn-danger btn-sm mr-1">Excluir</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p>Nenhuma tag cadastrada ainda. <a href="{% url 'tag_add' %}">Cadastre a primeira!</a></p>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

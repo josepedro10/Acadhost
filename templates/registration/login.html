@@ -1,0 +1,74 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center mt-5"> {# Centraliza o card #}
+  <div class="col-md-6 col-lg-4 grid-margin stretch-card"> {# Tamanho do card #}
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title text-center mb-4">Login</h4>
+        <p class="card-description text-center">
+          Entre com seu nome de usuário e senha.
+        </p>
+
+        <form method="post" class="forms-sample">
+          {% csrf_token %}
+          
+          {# Renderiza o formulário de autenticação #}
+          {% for field in form %}
+            <div class="form-group">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+              {% endif %}
+              {% if field.errors %}
+                <div class="badge badge-outline-danger mt-2">{{ field.errors }}</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+          {# Mensagens de erro não relacionadas a campos específicos #}
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+          {% endif %}
+
+          <button type="submit" class="btn btn-primary btn-block mt-3">Entrar</button> {# Botão de login #}
+          
+          {# Opcional: link para recuperação de senha ou registro #}
+          <div class="text-center mt-3">
+            <a href="#" class="text-small text-muted">Esqueceu a senha?</a> {# Adicione URL para reset de senha se tiver #}
+          </div>
+          <div class="text-center mt-2">
+            <a href="{% url 'usuarios_add' %}" class="text-small text-muted">Ainda não tem conta? Registre-se</a> {# Link para cadastro de usuário #}
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Estilização para garantir que os campos de input de senha apareçam corretamente */
+/* Estas regras CSS tentam mimetizar o estilo de input do seu tema */
+.form-group input[type="password"],
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group select {
+    background-color: #191c24; /* Cor de fundo do input (ex: tema escuro) */
+    color: #ffffff; /* Cor do texto */
+    border: 1px solid #2a2e3a; /* Cor da borda */
+    border-radius: 4px;
+    padding: 0.875rem 1.375rem;
+    height: auto;
+    line-height: 1.5;
+    width: 100%; /* Garante que o input ocupe toda a largura disponível */
+}
+</style>
+{% endblock %}

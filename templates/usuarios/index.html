@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">Listagem de Usuários</h1>
+        <h4 class="card-description">
+          Aqui você pode visualizar todos os usuários cadastrados.
+        </h4>
+
+        <a href="{% url 'usuarios_add' %}" class="btn btn-primary mb-3">Cadastrar Novo Usuário</a>
+
+        {% if usuarios %}
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Nome Completo</th>
+                <th>Telefone</th>
+                <th>Tipo</th>
+                <th>Data de Criação</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for usuario in usuarios %}
+                {# Condição para esconder usuários superusuários #}
+                {% if not usuario.is_superuser %} 
+                <tr>
+                  <td>{{ usuario.username }}</td>
+                  <td>{{ usuario.nome}}</td>
+                  <td>{{ usuario.telefone }}</td>
+                  <td>{{ usuario.get_tipo_display }}</td> 
+                  <td>{{ usuario.add_em|date:"d/m/Y H:i" }}</td>
+                  <td>
+                    <a href="{% url 'usuarios_detail' id_usuario=usuario.id %}" class="btn btn-info btn-sm mr-1">Ver detalhes</a>
+                    <a href="{% url 'usuarios_update' id_usuario=usuario.id %}" class="btn btn-warning btn-sm mr-1">Editar</a>
+                    <a href="{% url 'usuarios_delete' id_usuario=usuario.id %}" class="btn btn-danger btn-sm mr-1">Excluir</a>
+                  </td>
+                </tr>
+                {% endif %} {# Fim da condição #}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p>Nenhum usuário cadastrado ainda. <a href="{% url 'usuarios_add' %}">Cadastre o primeiro!</a></p>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Cadastro de Novo Usuário</h4>
+        <p class="card-description">
+          Preencha os campos abaixo para adicionar um novo usuário.
+        </p>
+
+        <form method="post" action="" class="forms-sample">
+          {% csrf_token %}
+
+          {% for field in form %}
+            <div class="form-group">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+              {% if field.errors %}<div class="badge badge-outline-danger mt-2">{{ field.errors }}</div>{% endif %}
+            </div>
+          {% endfor %}
+
+          <a href="{% url 'usuarios_index' %}" class="btn btn-dark">Cancelar</a>
+          <button type="submit" class="btn btn-primary ml-2">Salvar</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

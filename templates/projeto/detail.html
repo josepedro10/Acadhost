@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %} 
+
+{% block content %}
+{% spaceless %}
+<div class="row">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+        <h1 class="card-title">Detalhes do Projeto: {{ projeto.nome }}</h1> 
+        <h4 class="card-description">Informações completas sobre o projeto.</h4>
+
+        <div class="form-group d-flex align-items-center mb-3"> 
+          <label class="mb-0 mr-1 text-muted">Autor:</label> 
+          <p class="form-control-static mb-0 font-weight-bold">{{ projeto.autor.get_full_name|default:projeto.autor.username|default:"" }}</p> {# Adicionado |default:"" #}
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Nome:</label>
+          <p class="form-control-static mb-0 font-weight-bold">{{ projeto.nome|default:"" }}</p> {# Adicionado |default:"" #}
+        </div>
+
+        <div class="form-group mb-3"> 
+          <label class="text-muted">Introdução:</label>
+          <p class="form-control-static">{{ projeto.introducao|default:"" }}</p> {# Adicionado |default:"" #}
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="text-muted">Resumo:</label>
+          <p class="form-control-static">{{ projeto.resumo|default:"" }}</p> {# Adicionado |default:"" #}
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="text-muted">Referencial Teórico:</label>
+          <p class="form-control-static">{{ projeto.referencial_teorico|default:"" }}</p> {# Adicionado |default:"" #}
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="text-muted">Desenvolvimento:</label>
+          <p class="form-control-static">{{ projeto.desenvolvimento|default:"" }}</p> {# Adicionado |default:"" #}
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="text-muted">Resultados:</label>
+          <p class="form-control-static">{{ projeto.resultados|default:"" }}</p> {# Adicionado |default:"" #}
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="text-muted">Conclusão:</label>
+          <p class="form-control-static">{{ projeto.conclusao|default:"" }}</p> {# Adicionado |default:"" #}
+        </div>
+
+        <div class="form-group mb-3">
+          <label class="text-muted">Referências:</label>
+          <p class="form-control-static">{{ projeto.referencias|default:"" }}</p> {# Adicionado |default:"" #}
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Data de Criação:</label>
+          <p class="form-control-static mb-0">{{ projeto.data_criacao|date:"d/m/Y H:i"|default:"" }}</p> {# Adicionado |default:"" #}
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Última Atualização:</label>
+          <p class="form-control-static mb-0">{{ projeto.data_atualizacao|date:"d/m/Y H:i"|default:"" }}</p> {# Adicionado |default:"" #}
+        </div>
+
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Tags:</label> <p class="form-control-static mb-0"> {% for tag in projeto.tags.all %}<span class="badge badge-outline-info">{{ tag.nome|default:"" }}</span>{% if not forloop.last %},{% endif %} {# Adicionado |default:"" e removido espaço extra da vírgula #}{% empty %}Nenhuma tag
+           {% endfor %}
+          </p>
+        </div>
+
+        {# Exibição do Orientador em texto sem formatação #}
+        <div class="form-group d-flex align-items-center mb-3">
+            <label class="mb-0 mr-1 text-muted">Orientador:</label>
+            <p class="form-control-static mb-0">
+                {% for equipe_member in projeto.equipe_set.all %}
+                    {% if equipe_member.funcao == 'orientador' %}
+                        {{ equipe_member.membro.username|default:"" }} ({{ equipe_member.membro.get_tipo_display|default:"" }})
+                    {% endif %}
+                {% empty %}
+                    Nenhum orientador atribuído.
+                {% endfor %}
+            </p>
+        </div>
+
+        {# Exibição de Membros da Equipe (colaboradores) em texto sem formatação #}
+        <div class="form-group d-flex align-items-center mb-3">
+          <label class="mb-0 mr-1 text-muted">Membros da Equipe (Alunos):</label>
+          <p class="form-control-static mb-0">
+            {% for equipe_member in projeto.equipe_set.all %}
+                {% if equipe_member.funcao == 'colaborador' %} 
+                    {{ equipe_member.membro.username|default:"" }} ({{ equipe_member.membro.get_tipo_display|default:"" }}) 
+                {% endif %}
+            {% empty %}
+                Nenhum membro da equipe.
+            {% endfor %}
+          </p>
+        </div>
+        
+        <div class="mt-4"> 
+            <a href="{% url 'projeto_index' %}" class="btn btn-dark">Voltar para a Listagem</a>
+            <a href="{% url 'projeto_update' id_projeto=projeto.id %}" class="btn btn-warning ml-2">Editar Projeto</a>
+        </div>
+      </div>
+    </div> {# Fechamento de <div class="card"> #}
+  </div>
+</div>
+{% endspaceless %} {# NOVO: Fecha a tag spaceless #}
+{% endblock %}

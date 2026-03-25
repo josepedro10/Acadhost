@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">Atualização de Projeto</h1> 
+        <h4 class="card-description">
+          Edite os campos abaixo para atualizar o projeto.
+        </h4>
+
+        <form method="post" action="" class="forms-sample">
+          {% csrf_token %}
+
+          {% for field in form %}
+            <div class="form-group">
+              {# Se o campo for 'tags', adiciona o botão de "Adicionar Nova Tag" ao lado da label #}
+              {% if field.name == 'tags' %}
+                <div class="d-flex justify-content-between align-items-center mb-2"> {# Flexbox para alinhar label e botão #}
+                  <label for="{{ field.id_for_label }}" class="mb-0">{{ field.label }}</label> {# Label do campo tags #}
+                  <a href="{% url 'tag_add' %}" class="btn btn-outline-primary btn-sm">Adicionar Nova Tag</a> {# Botão #}
+                </div>
+                
+                <div class="tag-selection-container d-flex flex-wrap">
+                  {% for choice in field %}
+                    <div class="form-check mr-2 mb-2">
+                      <input type="checkbox"
+                             name="{{ choice.data.name }}"
+                             id="{{ choice.id_for_label }}"
+                             value="{{ choice.data.value }}"
+                             {% if choice.data.selected %}checked{% endif %}
+                             class="form-check-input d-none">
+                      
+                      <label class="btn {% if choice.data.selected %}btn-info{% else %}btn-outline-info{% endif %} btn-sm text-center" for="{{ choice.id_for_label }}">
+                        {{ choice.choice_label }}
+                      </label>
+                    </div>
+                  {% endfor %}
+                  {% if field.errors %}
+                    <div class="badge badge-outline-danger mt-2 w-100">{{ field.errors }}</div>
+                  {% endif %}
+                </div>
+              {% else %}
+                {# Para os outros campos, a label e o input ficam em linhas separadas como antes #}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+              {% endif %}
+
+              {% if field.help_text and field.name != 'tags' %}
+                <small class="form-text text-muted">{{ field.help_text }}</small>
+              {% endif %}
+              {% if field.errors and field.name != 'tags' %}
+                <div class="badge badge-outline-danger mt-2">{{ field.errors }}</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+
+          <a href="{% url 'projeto_index' %}" class="btn btn-dark">Cancelar</a>
+          <button type="submit" class="btn btn-primary ml-2">Atualizar</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tagCheckboxes = document.querySelectorAll('.tag-selection-container input[type="checkbox"]');
+
+    tagCheckboxes.forEach(checkbox => {
+        function updateButtonStyle(chk) {
+            const label = chk.nextElementSibling;
+            if (chk.checked) {
+                label.classList.remove('btn-outline-info');
+                label.classList.add('btn-info');
+            } else {
+                label.classList.remove('btn-info');
+                label.classList.add('btn-outline-info');
+            }
+        }
+
+        updateButtonStyle(checkbox);
+
+        checkbox.addEventListener('change', function() {
+            updateButtonStyle(this);
+        });
+    });
+});
+</script>
+
+{% endblock %}
